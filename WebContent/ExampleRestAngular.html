@@ -252,6 +252,14 @@
         });
     });
 </script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+        console.log("Acutalizando organigrama ...")
+        jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
+        console.log("Acutalizando organigrama <ok>")
+    }); 
+</script>
 </head>
 <body style="font-size: 12px">
     <div data-ng-controller="myController" >
@@ -288,7 +296,7 @@
         </div>
         <div id="centerpanel"
             style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
-            <div bp-org-diagram data-options="myOptions"
+            <div bp-org-diagram id="basicdiagram" data-options="myOptions"
                 data-on-highlight-changed="onMyHighlightChanged()"
                 data-on-cursor-changed="onMyCursorChanged()"
                 style="width: 800px; height: 600px; border-style: dotted; border-width: 1px;"></div>
