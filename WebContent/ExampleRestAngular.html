@@ -12,20 +12,25 @@
 <script type="text/javascript"
     src="plugin/jquery-ui-1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="plugin/jquery-ui-1.11.4/jquery-ui.min.css">
+<!-- LODASH Libraries -->
+<script type="text/javascript" src="plugin/lodash-4.12.0/lodash.js"></script>
+<!-- RESTANGULAR Libraries -->
+<script type="text/javascript" src="plugin/angularjs/restangular1.5.2.js"></script>
 <!--  PRIMITIVES Libraries -->
 <script type="text/javascript" src="plugin/primitives/primitives.min.js"></script>
 <link rel="stylesheet" href="plugin/primitives/primitives.latest.css"
     media="screen" type="text/css">
 
 <script>
-    var myApp = angular.module('myApp', [ 'BasicPrimitives' ]);
-    myApp.controller('myController',['$scope',function($scope) {
+    var myApp = angular.module('myApp', [ 'BasicPrimitives', 'restangular' ]);
+    myApp.controller('myController',function($scope, Restangular) {
                              $scope.index = 10;
                              $scope.Message = "";
 
                              var options = {};
 
-                             var items = [ new primitives.orgdiagram.ItemConfig({
+                             var items = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList(); 
+                             /* = [ new primitives.orgdiagram.ItemConfig({
                                  id : 0,
                                  parent : null,
                                  title : "Scott Aasrud",
@@ -61,7 +66,7 @@
                                  description : "Dotted Node",
                                  image : "images/photos/e.png",
                                  itemTitleColor : primitives.common.Colors.PaleVioletRed
-                             }) ];
+                             }) ]; */
 
                              options.items = items;
                              options.cursorItem = 0;
@@ -131,9 +136,13 @@
 
                                  return result;
                              }
-                         } ]);
+                         } );
+    //angular.module('RestFul', ['restangular'])
+    /* myApp.controller('WebServiceController', function($scope, Restangular) {
+        $scope.items = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList();
+    }); */
 
-    angular.module('BasicPrimitives', [], function($compileProvider) {
+    angular.module('BasicPrimitives', ['restangular'], function($compileProvider) {
         $compileProvider.directive('bpOrgDiagram', function($compile) {
             function link(scope, element, attrs) {
                 var itemScopes = [];
@@ -141,7 +150,14 @@
                 var config = new primitives.orgdiagram.Config();
                 
                 angular.extend(config, scope.options);
-
+                
+                 var items = [];
+                
+                angular.extend(items, scope.items);
+                
+                console.log("Items: ");
+                console.log(items);
+                config.items = items;
                 config.onItemRender = onTemplateRender;
                 config.onCursorChanged = onCursorChanged;
                 config.onHighlightChanged = onHighlightChanged;
@@ -237,43 +253,46 @@
     });
 </script>
 </head>
-<body data-ng-controller="myController" style="font-size: 12px">
-    <div id="westpanel"
-        style="width: 400px; padding: 10px; margin: 0px; border-style: dotted; font-size: 12px; border-color: grey; float: left; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
-        <p>Here is example of syncronized content between ngRepeat
-            directive and bpOrgDiagram directive.
-        <p>Cursor: {{myOptions.cursorItem}}
-        <p>Highlight: {{myOptions.highlightItem}}
-        <p>Message: {{Message}}
-        <p>
-        <ul>
-            <li ng-repeat="item in myOptions.items">
-                <p>Index: {{$index}}, Id: {{item.id}}, Parent:
-                    {{item.parent}}
-                <p>
-                    {{contact.title}}<input type="text"
-                        ng-model="item.title" ng-required />
-                <p>
-                    {{contact.description}}<input type="text"
-                        ng-model="item.description" ng-required />
-                <p>
-                    <button ng-click="$parent.setCursorItem(item.id)">Cursor</button>
-                    <button ng-click="$parent.setHighlightItem(item.id)">Highlight</button>
-                    <button ng-click="$parent.deleteItem($index)">Delete</button>
-                    <button
-                        ng-click="$parent.addItem($index + 1, item.id)">Add
-                        Child</button>
-            </li>
-        </ul>
-        <button ng-click="addItem(0, null)">New</button>
-
-    </div>
-    <div id="centerpanel"
-        style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
-        <div bp-org-diagram data-options="myOptions"
-            data-on-highlight-changed="onMyHighlightChanged()"
-            data-on-cursor-changed="onMyCursorChanged()"
-            style="width: 800px; height: 600px; border-style: dotted; border-width: 1px;"></div>
+<body style="font-size: 12px">
+    <div data-ng-controller="myController" >
+        {{myOptions.items}}
+        <div id="westpanel"
+            style="width: 400px; padding: 10px; margin: 0px; border-style: dotted; font-size: 12px; border-color: grey; float: left; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
+            <p>Here is example of syncronized content between ngRepeat
+                directive and bpOrgDiagram directive.
+            <p>Cursor: {{myOptions.cursorItem}}
+            <p>Highlight: {{myOptions.highlightItem}}
+            <p>Message: {{Message}}
+            <p>
+            <ul>
+                <li ng-repeat="item in myOptions.items">
+                    <p>Index: {{$index}}, Id: {{item.id}}, Parent:
+                        {{item.parent}}
+                    <p>
+                        {{contact.title}}<input type="text"
+                            ng-model="item.title" ng-required />
+                    <p>
+                        {{contact.description}}<input type="text"
+                            ng-model="item.description" ng-required />
+                    <p>
+                        <button ng-click="$parent.setCursorItem(item.id)">Cursor</button>
+                        <button ng-click="$parent.setHighlightItem(item.id)">Highlight</button>
+                        <button ng-click="$parent.deleteItem($index)">Delete</button>
+                        <button
+                            ng-click="$parent.addItem($index + 1, item.id)">Add
+                            Child</button>
+                </li>
+            </ul>
+            <button ng-click="addItem(0, null)">New</button>
+    
+        </div>
+        <div id="centerpanel"
+            style="overflow: hidden; padding: 0px; margin: 0px; border: 0px;">
+            <div bp-org-diagram data-options="myOptions"
+                data-on-highlight-changed="onMyHighlightChanged()"
+                data-on-cursor-changed="onMyCursorChanged()"
+                style="width: 800px; height: 600px; border-style: dotted; border-width: 1px;"></div>
+        </div>
     </div>
 </body>
 </html>
