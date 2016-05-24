@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>Basic Organizational Chart</title>
+		
+		<!--  JQUERY Libraries -->
+		<script type="text/javascript" src="plugin/jquery/jquery-1.12.3.js"></script>
+		<!-- ANGULAR Libraries -->
+		<script type="text/javascript" src="plugin/angularjs/angular.js"></script>
+		<!--  JQUERY UI Libraries -->
+		<script type="text/javascript"
+		    src="plugin/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="plugin/jquery-ui-1.11.4/jquery-ui.min.css">
+		<!-- LODASH Libraries -->
+		<script type="text/javascript" src="plugin/lodash-4.12.0/lodash.js"></script>
+		<!-- RESTANGULAR Libraries -->
+		<script type="text/javascript" src="plugin/angularjs/restangular1.5.2.js"></script>
+		<!--  PRIMITIVES Libraries -->
+		<script type="text/javascript" src="plugin/primitives/primitives.min.js"></script>
+		<link rel="stylesheet" href="plugin/primitives/primitives.latest.css"
+		    media="screen" type="text/css">
+		<script type="text/javascript">
+			angular.module('myApp', ['restangular' ]);
+			angular.module('myApp').controller('myController', function($scope, Restangular) {
+				var options = new primitives.orgdiagram.Config();
+				$scope.elementos = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList().$object;
+				console.log($scope.elementos )
+				            options.items = $scope.elementos;
+				            options.cursorItem = 0;
+				            options.hasSelectorCheckbox = primitives.common.Enabled.True;
+
+				            jQuery("#basicdiagram").orgDiagram(options);
+			});
+		</script>
+	</head>
+	<body ng-app="myApp">
+		<div ng-controller="myController">
+			{{elementos}}
+			<hr/>
+			<div id="basicdiagram" style="width: 640px; height: 480px; border-style: dotted; border-width: 1px;" ></div>
+		</div>
+	</body>
+</html>

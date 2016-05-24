@@ -28,52 +28,13 @@
                              $scope.Message = "";
 
                              var options = {};
-
-                             var items = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList(); 
-                             /* = [ new primitives.orgdiagram.ItemConfig({
-                                 id : 0,
-                                 parent : null,
-                                 title : "Scott Aasrud",
-                                 description : "Root",
-                                 phone : "1 (416) 001-4567",
-                                 email : "scott.aasrud@mail.com",
-                                 image : "images/photos/a.png",
-                                 itemTitleColor : primitives.common.Colors.RoyalBlue
-                             }), new primitives.orgdiagram.ItemConfig({
-                                 id : 1,
-                                 parent : 0,
-                                 title : "Ted Lucas",
-                                 description : "Left",
-                                 phone : "1 (416) 002-4567",
-                                 email : "ted.lucas@mail.com",
-                                 image : "images/photos/b.png",
-                                 itemTitleColor : primitives.common.Colors.RoyalBlue
-                             }), new primitives.orgdiagram.ItemConfig({
-                                 id : 2,
-                                 parent : 0,
-                                 title : "Joao Stuger",
-                                 description : "Right",
-                                 phone : "1 (416) 003-4567",
-                                 email : "joao.stuger@mail.com",
-                                 image : "images/photos/c.png",
-                                 itemTitleColor : primitives.common.Colors.RoyalBlue
-                             }), new primitives.orgdiagram.ItemConfig({
-                                 id : 3,
-                                 parent : 2,
-                                 title : "Hidden Node",
-                                 phone : "1 (416) 004-4567",
-                                 email : "hidden.node@mail.com",
-                                 description : "Dotted Node",
-                                 image : "images/photos/e.png",
-                                 itemTitleColor : primitives.common.Colors.PaleVioletRed
-                             }) ]; */
-
-                             options.items = items;
+                             
+                             options.items = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList().$object;
                              options.cursorItem = 0;
                              options.highlightItem = 0;
                              options.hasSelectorCheckbox = primitives.common.Enabled.True;
                              options.templates = [ getContactTemplate() ];
-                             options.defaultTemplateName = "contactTemplate";
+                             //options.defaultTemplateName = "contactTemplate";
 
                              $scope.myOptions = options;
 
@@ -142,7 +103,7 @@
         $scope.items = Restangular.all('ExampleAngularRestJsonBasicPrimitives/webapi/Employees').getList();
     }); */
 
-    angular.module('BasicPrimitives', ['restangular'], function($compileProvider) {
+    angular.module('BasicPrimitives', [], function($compileProvider) {
         $compileProvider.directive('bpOrgDiagram', function($compile) {
             function link(scope, element, attrs) {
                 var itemScopes = [];
@@ -253,17 +214,12 @@
     });
 </script>
 
-<script type="text/javascript">
-$(document).ready(function () {
-        console.log("Acutalizando organigrama ...")
-        jQuery("#basicdiagram").orgDiagram("update", primitives.orgdiagram.UpdateMode.Refresh);
-        console.log("Acutalizando organigrama <ok>")
-    }); 
-</script>
 </head>
 <body style="font-size: 12px">
     <div data-ng-controller="myController" >
         {{myOptions.items}}
+        <hr/>
+        {{elementos[1]}}
         <div id="westpanel"
             style="width: 400px; padding: 10px; margin: 0px; border-style: dotted; font-size: 12px; border-color: grey; float: left; border-width: 1px; overflow: scroll; -webkit-overflow-scrolling: touch;">
             <p>Here is example of syncronized content between ngRepeat
